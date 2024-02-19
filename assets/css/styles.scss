@@ -1,0 +1,18 @@
+---
+---
+
+@import "syntax.css";
+
+@import "styles";
+
+{% for tag in site.data.tags %}
+#content[data-filter~="{{ tag[0] }}"] {
+  tbody tr:not([data-tags~="{{ tag[0] }}"]) {
+    display: none;
+  }
+
+  a.tag[data-tag="{{ tag[0] }}"] {
+        @include tag-active;
+  }
+}
+{% endfor %}

@@ -1,0 +1,20 @@
+---
+layout: null
+---
+[
+{% for tool in site.tool %}
+{
+  "name": {{tool.title | jsonify}},
+  "url": {{tool.url | jsonify}},
+  "tags": {{tool.tags | jsonify}},
+  "refs": {{tool.references | jsonify}},
+  "html": {{tool.content | jsonify }},
+  "meta": {
+     "files": {{tool.files | jsonify}},
+     "sinks": {{tool.sinks | jsonify}},
+     "purl": {{tool.purl | jsonify}}
+  }
+}
+{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]

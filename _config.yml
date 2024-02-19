@@ -1,0 +1,34 @@
+title: LOTP
+email: security@boostsecurity.io
+description: >-
+  LOTP - Living Off The Pipeline
+url: "/lotp"
+
+exclude:
+- Gemfile
+- Gemfile.lock
+- .github
+
+collections:
+  tool:
+    output: true
+    permalink: /:collection/:title
+
+exclude:
+- Dockerfile
+- Gemfile
+- Gemfile.lock
+- vendor
+
+highlighter: rouge
+
+defaults:
+  - scope:
+      path: ''
+    values:
+      layout: 'default'
+  - scope:
+      path: ''
+      type: 'tool'
+    values:
+      layout: 'tool'

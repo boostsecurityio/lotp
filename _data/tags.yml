@@ -1,0 +1,30 @@
+cli:
+  docs: |
+    The tool is CLI that is not specific to a particular CI environment.
+github-actions:
+  docs: |
+    The tool is specific to GitHub Actions.
+injection:
+  docs: |
+    The tool is exploitable through a workflow injection.
+config-file:
+  docs: |
+    The tool loads a config file that allows code execution.
+input-file:
+  docs: |
+    The tool loads an input file that allows code execution.
+eval-js:
+  docs: |
+    The tool evaluates JavaScript code.
+eval-sh:
+  docs: |
+    The tool evaluates shell commands.
+eval-py:
+  docs: |
+    The tool evaluates Python code.
+eval-groovy:
+  docs: |
+    The tool evaluates Groovy code.
+eval-kotlin:
+  docs: |
+    The tool evaluates Kotlin code.
