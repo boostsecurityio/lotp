@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<h1><a href="{{site.url}}">LOTP</a></h1>
+<h2>{{ page.title }}</h2>
+<p class="tags">
+    {% for tag in page.tags %}
+        <a class="tag" data-tag="{{ tag }}" href="{{site.url}}?#{{ tag }}">{{ tag }}</a>
+    {% endfor %}
+</p>
+
+{% if page.references %}
+    <h3>References</h3>
+    <ul class="references">
+        {% for reference in page.references %}
+            <li><a href="{{ reference }}">{{ reference }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{{ content }}

@@ -1,0 +1,42 @@
+---
+layout: default
+title: Living Off the Pipeline
+---
+
+<h1><a href="{{site.url}}">LOTP</a></h1>
+
+{% include home.html %}
+
+<h2>Tags</h2>
+
+<p class="tags">
+    {% for tag in site.data.tags %}
+        <a class="tag" data-tag="{{tag[0]}}" href="{{site.url}}?#{{ tag[0] }}" title="{{ tag[1].docs }}">
+            {{ tag[0] }}
+        </a>
+    {% endfor %}
+    <a class="reset" href="{{site.url}}?">Reset</a>
+</p>
+
+
+
+<table class="lotp">
+    <thead>
+        <th>Tool</th>
+        <th>Tags</th>
+    </thead>
+    <tbody>
+        {% for tool in site.tool %}
+            <tr data-tags="{% for tag in tool.tags %}{{tag}} {% endfor %}">
+                <td><a href="{{site.url}}{{ tool.url }}">{{ tool.title }}</a></td>
+                <td>
+                    {% for tag in tool.tags %}
+                        <a class="tag" data-tag="{{tag}}" href="{{site.url}}?#{{ tag }}">{{ tag }}</a>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="{{site.url}}/assets/js/search.js"></script>

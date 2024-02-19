@@ -1,0 +1,78 @@
+$dark: #2e323c;
+$light: #fff;
+$brand: rgb(96, 165, 250);
+$accent: rgb(134, 239, 172);
+
+body {
+    background-color: $dark;
+    color: $light;
+    margin: 0;
+    font-family: sans-serif;
+    line-height: 1.3;
+}
+
+#content {
+    width: 96%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+a {
+    color: $brand;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+table.lotp {
+    width: 100%;
+
+    thead {
+        text-align: left;
+    }
+
+    th:first-child {
+        width: 30%
+    }
+
+    tr td:first-child {
+       overflow-wrap: none;
+    }
+}
+
+@mixin tag-active {
+    background-color: $accent;
+    color: $dark;
+}
+
+a.tag {
+    border: 1px solid $accent;
+    text-decoration: none;
+    padding: 0.1em 0.4em;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 1.05em;
+    margin-right: 0.2em;
+    margin-bottom: 0.2em;
+    color: $accent;
+
+    &:hover {
+        @include tag-active;
+
+    }
+}
+
+p.tags a.reset {
+    display: none;
+}
+
+#content:not([data-filter=""]) p.tags a.reset {
+    display: inline;
+}
+
+pre.highlight {
+    padding: 1em;
+    overflow-x: auto;
+}
