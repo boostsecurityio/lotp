@@ -12,7 +12,7 @@ purl: pkg:npm/eslint
 
 Eslint's uses a JavaScript configuration file. 
 
-In recent Eslint versions, it will load any of the following configuration files in the following order dependeing on the package.json module type:
+In recent Eslint versions, it will load any of the following configuration files in the following order depending on the package.json module type:
 - `eslint.config.js`
 - `eslint.config.mjs`
 - `eslint.config.cjs`
