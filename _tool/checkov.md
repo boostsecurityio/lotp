@@ -27,7 +27,7 @@ The directory `extra-checkov-checks` must contain a blank `__init__.py` and anot
 ### `extra-checkov-checks/POC.py`
 
 ```python
-pyimport os
+import os
 import tempfile
 lock_path = os.path.join(tempfile.gettempdir(), 'poc.lock')
 try:
