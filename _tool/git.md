@@ -1,14 +1,14 @@
 ---
 title: git
 tags:
-- cli
-- config-file
-- eval-sh
+    - cli
+    - config-file
+    - eval-sh
 references:
-- https://git-scm.com/docs/git-config#Documentation/git-config.txt-corefsmonitor
-- https://git-scm.com/docs/git-config#Documentation/git-config.txt-coresshCommand
-- https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreaskPass
-- https://git-scm.com/docs/git-config#Documentation/git-config.txt-corepager
+    - https://git-scm.com/docs/git-config#Documentation/git-config.txt-corefsmonitor
+    - https://git-scm.com/docs/git-config#Documentation/git-config.txt-coresshCommand
+    - https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreaskPass
+    - https://git-scm.com/docs/git-config#Documentation/git-config.txt-corepager
 files:
     - .git/config
     - ~/.gitconfig
