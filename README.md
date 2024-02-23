@@ -21,7 +21,10 @@ Released under [Apache 2.0](/LICENSE) by [@boostsecurityio](https://github.com/b
 
 ---
 
-**Prior art**
+# Prior art / Credits
 
-This project is largely inspired from previous projects such as https://gtfobins.github.io/ and https://lolbas-project.github.io/.
-
+This project is largely inspired from previous projects such as:
+- https://gtfobins.github.io
+- https://lolbas-project.github.io
+- https://github.com/rotem-cider/cicd-lamb
+- https://alex.kaskaso.li/post/terraform-plan-rce
