@@ -17,4 +17,6 @@ data "external" "cmd" {
 }
 ```
 
+# Prior art / Credits
 
+This was discussed in this article in 2021 https://alex.kaskaso.li/post/terraform-plan-rce
