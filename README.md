@@ -3,7 +3,7 @@
 [![stars - lotp](https://img.shields.io/github/stars/boostsecurityio/lotp?style=social)](https://github.com/boostsecurityio/lotp)
 [![forks - lotp](https://img.shields.io/github/forks/boostsecurityio/lotp?style=social)](https://github.com/boostsecurityio/lotp)
 [![issues - lotp](https://img.shields.io/github/issues/boostsecurityio/lotp)](https://github.com/boostsecurityio/lotp/issues)
-[![License](https://img.shields.io/badge/License-AGPL--3.0-blue)](#license)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 [![View site - GH Pages](https://img.shields.io/badge/View_site-GH_Pages-2ea44f?style=for-the-badge)](https://boostsecurityio.github.io/lotp/)
 
@@ -17,7 +17,7 @@ We welcome contributions submitted as `Pull Requests` with new tool contribution
 
 # License
 
-Released under [AGPL-3.0](/LICENSE) by [@boostsecurityio](https://github.com/boostsecurityio).
+Released under [Apache 2.0](/LICENSE) by [@boostsecurityio](https://github.com/boostsecurityio).
 
 ---
 
