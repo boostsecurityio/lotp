@@ -7,6 +7,7 @@ tags:
 - eval-sh
 references:
 - https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild
+- https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory
 ---
 
 MSBuild is a platform for building C#/.NET applications. It comes together with Visual Studio, but can be installed separately. 
@@ -27,10 +28,11 @@ Sample `build.proj` config:
 You can also inject into MSBuild process without modifying any existing file and creating a new one insted.
 For this to be possible, the original project has to either import `Microsoft.Common.props` or it needs to be an [SDK style project](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild?view=vs-2022#project-file).
 
-MSBuild will look for a `Directory.Build.Targets` in a project directory and all parent directories, and imports it automatically.
+MSBuild searches upwards for a `Directory.Build.props` file from the project directory, and imports it automatically.
 
 When imported, you can inject into the process using `BeforeTargets` keyword.
 
+Sample `Directory.Build.props`
 ```xml
 <Project>
   <Target Name="malicious" BeforeTargets="Build">
