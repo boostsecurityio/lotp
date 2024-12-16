@@ -27,3 +27,4 @@ This project is largely inspired from previous projects such as:
 - https://gtfobins.github.io
 - https://lolbas-project.github.io
 - https://github.com/rotem-cider/cicd-lamb
+
