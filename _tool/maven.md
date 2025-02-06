@@ -7,7 +7,7 @@ references:
 - https://central.sonatype.com/artifact/org.codehaus.mojo/exec-maven-plugin
 ---
 
-In `pom.xml`, plugins can be added. The plugin `org.codehaus.mojo/exec-maven-plugin` can be used to run shell commands. For example, running the `env` command after the `clean` phase:
+In `pom.xml`, plugins can be added.  The plugin `org.codehaus.mojo/exec-maven-plugin` can be used to run shell commands. For example, running the `env` command after the `clean` phase:
 
 ```xml
 <build>
