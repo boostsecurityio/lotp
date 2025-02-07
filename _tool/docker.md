@@ -12,7 +12,7 @@ Docker is a container tool to create OCI image and run containers. The build sta
 
 ## `docker build`
 
-`docker build <path>` allow RCE in the context of the build:
+`docker build <path>` allow RCE in the limited context of the build:
   - if the Dockerfile can be modified, by adding `RUN <sh_cmd>`.
   - if the input of `RUN` is controllable.
 Since the build command set the context to a copy of the current folder, we can't the filesystem. If we have control over the context path `docker build <controlled_path> -f <Dockerfile>`, we can exfiltrate any data from the host.
