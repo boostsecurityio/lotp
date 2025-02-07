@@ -17,7 +17,7 @@ If `tar` use `-P` or `--absolute-names`, it is vulnerable to [Zip Slip](https://
   - Replace an executable or a config file which can lead to RCE
 To create a malicious archive:
 ```sh
-tar c -P -f zipslip.tar ../../../../../../bin/sh
+tar cPf zipslip.tar ../../../../../../bin/sh
 ```
 
 ## Environnement variable
