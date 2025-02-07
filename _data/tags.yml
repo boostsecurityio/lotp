@@ -15,7 +15,7 @@ input-file:
     The tool loads an input file that allows code execution.
 env-var:
   docs: |
-    The tool uses a environnement variable that allows code execution.
+    The tool uses an environment variable that allows code execution.
 eval-js:
   docs: |
     The tool evaluates JavaScript code.
