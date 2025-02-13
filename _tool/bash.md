@@ -24,6 +24,6 @@ This means there is pre-requisite of a some kind of RCE or at very least arbitra
 
 ## Configuration file
 
-Alternatively if the `.bashrc`, `.bash_profile`, or `.initrc` can be poisonned, that will affect subsequent Bash execution.
+Alternatively if the `.bashrc`, `.bash_profile`, or `.initrc` can be poisonned (on some CI environments other than GitHub Actions, maybe), that will affect subsequent Bash execution.
 
 ⚠️ Important Note ⚠️: GitHub Actions runners execute the `run:` statements using `bash --noprofile --norc -e -o pipefail {0}` which DOES NOT load those configuration files.
