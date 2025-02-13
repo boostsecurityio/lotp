@@ -40,7 +40,7 @@ fn main() {
 }
 ```
 
-*Note: The build process doesn't have access to the environnement variable from the bash session.
+⚠️ Note: The build process doesn't have access to the environnement variable from the bash session.
 
 
 ## Run
