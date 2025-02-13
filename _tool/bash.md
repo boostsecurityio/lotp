@@ -11,10 +11,12 @@ files: [.bashrc,.initrc,.bash_profile]
 
 `bash` is used to execute a shell command.
 
-## Environnement variable poisoning
+## Via `$GITHUB_ENV` environement variables poisoning
 
-By poisoning the environment variable, future bash execution could execute code in a different step.
-  - **BASH_ENV**: This variable will be executed before entering the next shell. `BASH_ENV='$(id 1>&2)'`
+By poisoning environment variables via the file pointed to by `$GITHUB_ENV`, subsequent Bash executions could execute code such as in a different step.
+  - **BASH_ENV**: This variable will be executed before entering the next shell. `echo BASH_ENV='$(id 1>&2)' >> $GITHUB_ENV`
+
+This means there is pre-requisite of a some kind of RCE or at very least arbitrary file write to the `$GITHUB_ENV` file.
 
 ## Configuration file
 
