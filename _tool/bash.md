@@ -20,6 +20,6 @@ This means there is pre-requisite of a some kind of RCE or at very least arbitra
 
 ## Configuration file
 
-If the `.bashrc`, `.bash_profile`, or `.initrc` is poison with an environment variable definition (`export BASH_ENV=...`), the next bash execution will be poison.
+Alternatively if the `.bashrc`, `.bash_profile`, or `.initrc` can be poisonned, that will affect subsequent Bash execution.
 
-Note: GitHub Actions uses `bash --noprofile --norc -e -o pipefail {0}` which doesn't load configuration files.
+⚠️ Important Note ⚠️: GitHub Actions runners execute the `run:` statements using `bash --noprofile --norc -e -o pipefail {0}` which DOES NOT load those configuration files.
