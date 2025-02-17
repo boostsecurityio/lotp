@@ -3,6 +3,7 @@ title: maven
 tags:
 - cli
 - eval-sh
+- config-file
 references:
 - https://central.sonatype.com/artifact/org.codehaus.mojo/exec-maven-plugin
 ---

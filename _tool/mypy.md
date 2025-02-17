@@ -3,6 +3,7 @@ title: mypy
 tags:
 - cli
 - eval-sh
+- config-file
 references:
 - https://mypy.readthedocs.io/en/stable/config_file.html#the-mypy-configuration-file
 files: ['mypy.ini', .mypy.ini']
