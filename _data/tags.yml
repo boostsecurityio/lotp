@@ -31,3 +31,6 @@ eval-groovy:
 eval-kotlin:
   docs: |
     The tool evaluates Kotlin code.
+eval-go:
+  docs: |
+    The tool evaluates go commands.
