@@ -24,7 +24,7 @@ require("child_process").execSync("id");
 
 ## Comments
 
-`webpack` will execute magic comments in the analyzed files.
+`webpack` will execute magic comments in analyzed files.
 
 ```typescript
 import(
