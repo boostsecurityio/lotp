@@ -10,7 +10,7 @@ files:
 - *.py
 ---
 
-Pytest is a framework to ease testing of python project. It will run any `test_something.py` if it contains a `test_` function. `assert False` will show the stdout.
+Pytest is a framework that simplifies testing Python projects. It runs test files (e.g., `test_*.py` or `*_test.py`) and executes functions within them that are prefixed with `test_`. If a test fails (e.g., with `assert False`), pytest displays the captured stdout from that test.
 
 `test_pwn.py`
 
