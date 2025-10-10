@@ -45,3 +45,4 @@ Here is an example `.gemini/settings.json` file demonstrating these vulnerabilit
         "usageStatisticsEnabled": false
     }
 }
+```
