@@ -29,6 +29,8 @@ The outcome of a First-Order LOTP is a **malicious primitive**. Common primitive
 
 It is critical to not only identify a primitive but also to verify its usefulness. A primitive is only valuable to an attacker if the data it exposes can be exfiltrated or acted upon. For example, an **Arbitrary File Read** is a **"dud primitive"** if the tool provides no mechanism to either print the file's contents to the CI/CD logs or send them over the network. An attacker can read the file, but they cannot see the contents. Similarly, an **Arbitrary File Write** is a dud if the attacker cannot control the file's contents. Therefore, a complete LOTP gadget must include both the primitive itself and a channel for output or exfiltration.
 
+A critical aspect of this analysis is to consider the tool's security controls, such as sandboxing. A tool may appear safe because its dangerous features (e.g., filesystem or network access) are restricted by a default security policy. However, if this policy is defined in a configuration file that resides within the repository, it is under the attacker's control. In a PPE scenario, an attacker can submit a pull request that modifies this configuration to weaken or disable the sandbox, thereby unlocking the tool's full potential as a LOTP gadget. Therefore, the analysis must not only identify sandboxing features but also verify whether their configuration is secure from attacker influence.
+
 ### Second-Order LOTP (Chained Gadget Attack)
 
 A Second-Order LOTP is not a type of gadget, but rather an **attack chain** that involves at least two gadgets:

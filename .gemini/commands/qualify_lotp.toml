@@ -24,6 +24,7 @@ Your task is to analyze the specified tool and determine if it qualifies as a Fi
 
 3.  **Analyze for LOTP Characteristics:** Base your entire analysis on the concepts defined in `GEMINI.md`.
     *   **Important**: Your analysis must assume you are analyzing the latest, fully-patched version of the tool. Do not base your conclusion on past CVEs or vulnerabilities that have been fixed. The goal is to identify currently documented features that can be abused as LOTP gadgets because the tool's threat model did not account for a malicious actor controlling its configuration or input files within a CI/CD pipeline.
+    *   **Investigate Sandboxing:** If the tool includes security features like sandboxing to restrict file or network access, you must investigate whether this sandbox can be reconfigured or disabled. Crucially, determine if the sandbox's configuration is stored in a file within the repository (e.g., `tool.config.yaml`, `.toolrc`). If an attacker can modify this configuration in a pull request, the sandbox should be considered bypassable, and the tool must be evaluated based on the primitives it would expose in its least restrictive configuration.
     *   **Analyze for First-Order LOTP (Direct Primitive):**
         *   Does the tool process a **configuration file** (e.g., `package.json`) or a **data input file** (e.g., an XSLT stylesheet) that could be controlled by an attacker in a pull request?
         *   If yes, what is the resulting **malicious primitive**? Based on the primitive, classify it as a **Tool** or a **Gadget**.
