@@ -120,3 +120,8 @@ The attacks described present a significant threat in CI/CD environments that sh
 If non-vulnerable CI runners retrieve dependencies from a shared cache without verifying their hash against the legitimate index (Pypi) — which they do not and cannot do — they will use the attacker's poisoned version.
 
 A single vulnerable workflow can thereby compromise other, unrelated workflows that share its cache.
+
+# uv
+`uv` is a Python package installer and resolver. 
+
+The LOTPs defined for pip also apply to `uv` with `uv pip install`. 
