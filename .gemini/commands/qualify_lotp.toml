@@ -24,21 +24,23 @@ Your task is to analyze the specified tool and determine if it qualifies as a Fi
 
 3.  **Analyze for LOTP Characteristics:** Base your entire analysis on the concepts defined in `GEMINI.md`.
     *   **Important**: Your analysis must assume you are analyzing the latest, fully-patched version of the tool. Do not base your conclusion on past CVEs or vulnerabilities that have been fixed. The goal is to identify currently documented features that can be abused as LOTP gadgets because the tool's threat model did not account for a malicious actor controlling its configuration or input files within a CI/CD pipeline.
-    *   **Analyze for First-Order LOTP (Direct Primitive Gadget):**
+    *   **Analyze for First-Order LOTP (Direct Primitive):**
         *   Does the tool process a **configuration file** (e.g., `package.json`) or a **data input file** (e.g., an XSLT stylesheet) that could be controlled by an attacker in a pull request?
-        *   If yes, what is the resulting **malicious primitive**? Be specific. Crucially, you must also verify that the primitive is not a **"dud"**. A primitive is only useful if the attacker can see or use the result. For example, if the tool can read a file, can it also print the contents to the logs or send them over the network? If it can write a file, can the attacker control the contents? Your analysis must confirm a complete chain from primitive to useful output.
-            *   **Remote Code Execution (RCE):** Can it run arbitrary commands?
-            *   **Arbitrary File Write:** Can it write or overwrite files anywhere on the filesystem?
-            *   **Arbitrary File Read:** Can it read arbitrary files from the filesystem?
-            *   **Arbitrary Network Access:** Can it make outbound network calls (e.g., HTTP, DNS)?
-            *   **Environment Variable Manipulation:** Can it set environment variables for subsequent pipeline steps?
-    *   **Analyze for Second-Order LOTP (Chained Gadget Attack):**
-        *   If the tool provides a primitive other than RCE, could it act as a **"Setup" Gadget**? Explain how its primitive could be used to enable another tool.
-        *   Could this tool act as an **"Execution" Gadget**? (i.e., it is triggered by a change made by a setup gadget).
+        *   If yes, what is the resulting **malicious primitive**? Based on the primitive, classify it as a **Tool** or a **Gadget**.
+            *   **LOTP Tool (RCE):** Does it provide direct Remote Code Execution?
+            *   **LOTP Gadget (Non-RCE Primitives)::** Does it provide a lesser primitive?
+                *   **Arbitrary File Write:** Can it write or overwrite files anywhere on the filesystem?
+                *   **Arbitrary File Read:** Can it read arbitrary files from the filesystem?
+                *   **Arbitrary Network Access:** Can it make outbound network calls (e.g., HTTP, DNS)?
+                *   **Environment Variable Manipulation:** Can it set environment variables for subsequent pipeline steps?
+        *   Crucially, you must also verify that the primitive is not a **"dud"**. A primitive is only useful if the attacker can see or use the result. For example, if a gadget can read a file, can it also print the contents to the logs or send them over the network? If it can write a file, can the attacker control the contents? Your analysis must confirm a complete chain from primitive to useful output.
+    *   **Analyze for Second-Order LOTP (Chained Attack):**
+        *   If it is a **Gadget**, could it act as a **"Setup Gadget"**? Explain how its primitive could be used to enable another tool.
+        *   Could this tool act as an **"Execution Gadget"**? (i.e., it is triggered by a change made by a setup gadget).
 
 4.  **Provide a Conclusion:**
-    *   State clearly whether the tool is a First-Order LOTP gadget and why.
+    *   State clearly whether the item is a **First-Order LOTP Tool** or a **First-Order LOTP Gadget**, and why.
     *   Specify the exact malicious primitive it provides.
-    *   If applicable, discuss its potential role as a "Setup" or "Execution" gadget in a Second-Order attack chain.
+    *   If it is a Gadget, discuss its potential role as a "Setup" or "Execution" gadget in a Second-Order attack chain.
     *   Reference specific examples or official documentation for the tool to support your conclusion.
 """

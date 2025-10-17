@@ -2,9 +2,14 @@ A tool is considered a "Living Off The Pipeline" (LOTP) gadget when it can be ab
 
 There are two main concepts in this framework:
 
-### First-Order LOTP (Direct Primitive Gadget)
+### First-Order LOTP (Direct Primitive)
 
-This is a tool that, in a single step, produces a malicious primitive by processing an attacker-controlled file. These gadgets are the fundamental building blocks of pipeline attacks. The malicious primitive is not always full Remote Code Execution (RCE); lesser, but still powerful, primitives are more common.
+This is a tool or utility that, in a single step, produces a malicious primitive by processing an attacker-controlled file. These are the fundamental building blocks of pipeline attacks. To better classify the risk, we distinguish between "Tools" and "Gadgets":
+
+*   A **First-Order LOTP Tool** provides direct **Remote Code Execution (RCE)**. These are the most critical vulnerabilities, as they give an attacker immediate control over the pipeline runner.
+    *   *Examples:* `make` executing a command from a `Makefile`, `npm` running a malicious `postinstall` script.
+*   A **First-Order LOTP Gadget** provides a lesser, non-RCE primitive. While not immediately granting RCE, these primitives are powerful building blocks for data exfiltration or for setting up a Second-Order attack.
+    *   *Examples:* `trivy`'s templating feature allowing arbitrary network access for data exfiltration, an XSLT processor writing a file to a known location.
 
 An attacker-controlled file can be one of two types:
 
