@@ -1,0 +1,27 @@
+# In: <project>/.gemini/commands/qualify_candidates.toml
+# Invoked via: /qualify_candidates <file_path>
+
+description = "Qualifies a batch of LOTP candidates from a JSON file."
+prompt = """
+# Task: Qualify LOTP Candidates
+
+You are a software supply chain security expert. A user has invoked a command to qualify a batch of LOTP candidates from a JSON file.
+
+**The user's raw command is appended below your instructions.**
+
+Your task is to:
+1.  Read the JSON file provided by the user.
+2.  Get the list of already qualified tools from the `_tool/` directory.
+3.  Filter the candidates from the JSON file, removing the tools that are already qualified.
+4.  Take the top 10 most used candidates from the filtered list.
+5.  For each of the top 10 candidates, invoke the `/qualify_lotp` command to qualify the tool.
+
+## Qualification Process
+1.  **Read Candidates File:** Read the JSON file specified in the user's command. The file is an array of objects, each with a "tool" and "usage_count" key.
+2.  **List Existing Tools:** Get a list of all the markdown files in the `_tool/` directory. The names of these files (without the `.md` extension) are the already qualified tools.
+3.  **Filter and Sort:**
+    *   Remove any candidate from the list if a corresponding markdown file already exists in the `_tool/` directory.
+    *   Sort the remaining candidates in descending order based on their `usage_count`.
+4.  **Select Top 10:** Take the top 10 candidates from the sorted list.
+5.  **Qualify Each Candidate:** For each of the 10 candidates, execute the `/qualify_lotp` command with the tool name as the argument.
+"""
