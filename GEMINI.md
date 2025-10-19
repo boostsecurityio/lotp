@@ -13,7 +13,7 @@ This is a tool or utility that, in a single step, produces a malicious primitive
 
 An attacker-controlled file can be one of two types:
 
-1.  **Configuration File:** A file the tool implicitly loads from the workspace. An attacker modifies this file to alter the tool's behavior.
+1.  **Configuration File:** A file the tool implicitly loads from a location an attacker can control (e.g., the current working directory, the repository root). An attacker modifies this file to alter the tool's behavior. This is distinct from configuration files loaded from secure, trusted locations (e.g., a user's home directory), which do not constitute a LOTP vector.
 2.  **Data Input File:** A file that is explicitly passed to the tool as its primary input.
 
 The outcome of a First-Order LOTP is a **malicious primitive**. Common primitives include:
