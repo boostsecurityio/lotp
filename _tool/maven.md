@@ -1,54 +1,41 @@
 ---
-title: maven
-tags:
-- cli
-- eval-sh
-- env-var
-- config-file
-references:
-- https://central.sonatype.com/artifact/org.codehaus.mojo/exec-maven-plugin
-- https://maven.apache.org/configure.html#maven_opts-environment-variable
-files: [pom.xml]
+layout: tool
+title: mvn
+parent: Living Off The Pipeline
+nav_order: 9
 ---
 
-## Config file
+## Living Off The Pipeline - mvn (Maven)
 
-In `pom.xml`, plugins can be added.  The plugin `org.codehaus.mojo/exec-maven-plugin` can be used to run shell commands. For example, running the `env` command after the `clean` phase:
+Apache Maven is a build automation tool for Java projects. Its build process is driven by a `pom.xml` file and can be influenced by environment variables, both of which can be manipulated by an attacker to execute arbitrary code.
 
-```xml
-<build>
-  <plugins>
-    [...]
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>exec-maven-plugin</artifactId>
-      <version>3.1.1</version>
-      <executions>
-        <execution>
-          <id>run-after-clean</id>
-          <phase>clean</phase>
-          <goals>
-            <goal>exec</goal>
-          </goals>
-          <configuration>
-            <executable>sh</executable>
-            <arguments>
-              <argument>-xc</argument>
-              <argument>env</argument>
-            </arguments>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-    [...]
-  </plugins>
-</build>
-```
+### Vector 1: `pom.xml` Plugin Execution (First-Order LOTP Tool)
 
-## Environment poisoning
+Maven's primary LOTP vector is its plugin architecture, configured via the `pom.xml` file. This makes `mvn` a **First-Order LOTP Tool**.
 
-If the attacker has control over the environment variable, since version 3.9,  **MAVEN_ARGS** can be used to inject a plugin and gain RCE. In Gitlab, the previous version of Mavan can be used with **MAVEN_CLI_OPTS**, see this [example](https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Maven.gitlab-ci.yml).
+#### Malicious Primitive: Remote Code Execution (RCE)
 
-```sh
-export MAVEN_ARGS="org.codehaus.mojo:exec-maven-plugin:3.2.0:exec -Dexec.executable=/bin/sh"
-```
+The `pom.xml` file allows a developer to define plugins that execute at specific phases of the build lifecycle. An attacker can abuse this by adding a malicious plugin configuration to the `pom.xml` in their pull request. When a standard `mvn` command (like `mvn install`) is run, Maven will execute the attacker's plugin, leading to RCE. A common choice for this is the `exec-maven-plugin`.
+
+*   **Attack Chain:**
+    1.  **Attacker's PR:** An attacker submits a pull request with a modified `pom.xml` containing a malicious plugin execution bound to an early phase like `validate`.
+    2.  **Vulnerable Workflow:** The pipeline runs a standard command like `mvn install`.
+    3.  **Execution:** Maven parses the `pom.xml`, finds the malicious plugin, and executes its payload.
+
+### Vector 2: Environment Variable Poisoning (Execution Gadget)
+
+Maven's startup script reads environment variables like `MAVEN_ARGS` to allow for command-line arguments to be set globally. This makes `mvn` a powerful **Execution Gadget** in a Second-Order attack.
+
+#### Malicious Primitive: Remote Code Execution (RCE)
+
+An attacker can use a "Setup Gadget" to write a malicious value to the `MAVEN_ARGS` environment variable. Any subsequent `mvn` command in the same job will then execute the attacker's payload.
+
+*   **Attack Chain:**
+    1.  **Setup Gadget:** A tool in the pipeline is exploited to write to the environment file (e.g., `echo "MAVEN_ARGS=...malicious plugin..." >> $GITHUB_ENV`).
+    2.  **Execution Gadget (`mvn`):** A later step in the pipeline runs a standard `mvn install` command. The Maven process starts, reads the poisoned `MAVEN_ARGS` variable from the environment, and executes the attacker's malicious command.
+
+### References
+
+*   [Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
+*   [Exec Maven Plugin](https://www.mojohaus.org/exec-maven-plugin/)
+*   [Configuring Maven (`MAVEN_OPTS`)](https://maven.apache.org/configure.html)

