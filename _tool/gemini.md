@@ -19,7 +19,7 @@ The Gemini CLI's behavior is controlled by a `.gemini/settings.json` file. An at
 
 The configuration file has multiple keys that execute shell commands as soon as the CLI starts up. This is the most direct attack vector.
 - **`tools.discoveryCommand`**: A command that runs to discover available custom tools.
-- **`mcpServers.<SERVER_NAME>.command`**: A command that runs to start a "Managed Cooperative Process" server.
+- **`mcpServers.<SERVER_NAME>.command`**: A command that runs to start a Model Context Protocol server.
 
 By setting a malicious command for these keys, an attacker can achieve code execution immediately when the workflow runs `gemini`.
 
