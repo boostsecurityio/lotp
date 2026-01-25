@@ -14,4 +14,4 @@ files: [requirements.txt, constraints.txt, setup.py, pyproject.toml]
 
 The LOTPs defined for pip also apply to `uv` with `uv pip install`. 
 
-See [pip LOTP article](pip.md). 
+See [pip LOTP article](https://boostsecurityio.github.io/lotp/tool/pip). 
