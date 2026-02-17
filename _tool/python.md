@@ -10,7 +10,7 @@ files: []
 
 `python` is used to execute Python programs.
 
-## Environement variable poisoning
+## Environment variable poisoning
 
 By default, `python` doesn't load any configuration files in the current directory. However, if we're able to poison multiple environment variables, we can gain code execution before any `python`/`pip` invocation through the `$PYTHONWARNINGS` environment variable.
 
