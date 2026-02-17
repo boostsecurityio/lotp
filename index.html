@@ -3,7 +3,7 @@ layout: default
 title: Living Off the Pipeline
 ---
 
-<h1><a href="{{site.url}}">LOTP</a></h1>
+<h1><a href="{{site.baseurl}}">LOTP</a></h1>
 
 {% include home.html %}
 
@@ -11,11 +11,11 @@ title: Living Off the Pipeline
 
 <p class="tags">
     {% for tag in site.data.tags %}
-        <a class="tag" data-tag="{{tag[0]}}" href="{{site.url}}?#{{ tag[0] }}" title="{{ tag[1].docs }}">
+        <a class="tag" data-tag="{{tag[0]}}" href="{{site.baseurl}}?#{{ tag[0] }}" title="{{ tag[1].docs }}">
             {{ tag[0] }}
         </a>
     {% endfor %}
-    <a class="reset" href="{{site.url}}?">Reset</a>
+    <a class="reset" href="{{site.baseurl}}?">Reset</a>
 </p>
 
 
@@ -28,10 +28,10 @@ title: Living Off the Pipeline
     <tbody>
         {% for tool in site.tool %}
             <tr data-tags="{% for tag in tool.tags %}{{tag}} {% endfor %}">
-                <td><a href="{{site.url}}{{ tool.url }}">{{ tool.title }}</a></td>
+                <td><a href="{{site.baseurl}}{{ tool.url }}">{{ tool.title }}</a></td>
                 <td>
                     {% for tag in tool.tags %}
-                        <a class="tag" data-tag="{{tag}}" href="{{site.url}}?#{{ tag }}">{{ tag }}</a>
+                        <a class="tag" data-tag="{{tag}}" href="{{site.baseurl}}?#{{ tag }}">{{ tag }}</a>
                     {% endfor %}
                 </td>
             </tr>
@@ -39,4 +39,4 @@ title: Living Off the Pipeline
     </tbody>
 </table>
 
-<script src="{{site.url}}/assets/js/search.js"></script>
+<script src="{{site.baseurl}}/assets/js/search.js"></script>
