@@ -2,11 +2,11 @@
 layout: default
 ---
 
-<h1><a href="{{site.url}}">LOTP</a></h1>
+<h1><a href="{{site.baseurl}}">LOTP</a></h1>
 <h2>{{ page.title }}</h2>
 <p class="tags">
     {% for tag in page.tags %}
-        <a class="tag" data-tag="{{ tag }}" href="{{site.url}}?#{{ tag }}">{{ tag }}</a>
+        <a class="tag" data-tag="{{ tag }}" href="{{site.baseurl}}?#{{ tag }}">{{ tag }}</a>
     {% endfor %}
 </p>
 
