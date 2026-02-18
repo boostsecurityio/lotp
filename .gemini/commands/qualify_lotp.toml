@@ -1,0 +1,47 @@
+# In: <project>/.gemini/commands/qualify_lotp.toml
+# Invoked via: /qualify_lotp <tool_name> [optional_description]
+
+description = "Qualifies a tool as a potential LOTP (Living Off The Pipeline) gadget based on the project's knowledge base."
+prompt = """
+# Task: Qualify a LOTP Gadget
+
+You are a software supply chain security expert. A user has invoked a command to qualify a tool as a potential "Living Off The Pipeline" (LOTP) gadget.
+
+**The user's raw command is appended below your instructions.**
+{{ if .optional_description }}
+**User-provided description:** {{ .optional_description }}
+{{ end }}
+
+Your task is to analyze the specified tool and determine if it qualifies as a First-Order or Second-Order LOTP. You must use the framework and definitions outlined in the project's `GEMINI.md` file as your primary reference.
+
+## Qualification Process
+1.  **Identify the Tool:** State the name of the tool you are analyzing from the user's input. If you are unfamiliar with the tool, perform a web search to understand its purpose and find its official documentation.
+
+2.  **Consult the Knowledge Base:**
+    *   First, check if the tool has already been documented. Search for a corresponding markdown file in the `_tool/` directory (e.g., for `yarn`, check `_tool/yarn.md`).
+    *   If a document exists, summarize the existing analysis and conclude.
+    *   If no document exists, check for similar, already-documented tools in the knowledge base (e.g., for `pnpm`, you might reference `npm` or `yarn`). This can help inform your analysis.
+
+3.  **Analyze for LOTP Characteristics:** Base your entire analysis on the concepts defined in `GEMINI.md`.
+    *   **Important**: Your analysis must assume you are analyzing the latest, fully-patched version of the tool. Do not base your conclusion on past CVEs or vulnerabilities that have been fixed. The goal is to identify currently documented features that can be abused as LOTP gadgets because the tool's threat model did not account for a malicious actor controlling its configuration or input files within a CI/CD pipeline.
+    *   **Investigate Sandboxing:** If the tool includes security features like sandboxing to restrict file or network access, you must investigate whether this sandbox can be reconfigured or disabled. Crucially, determine if the sandbox's configuration is stored in a file within the repository (e.g., `tool.config.yaml`, `.toolrc`). If an attacker can modify this configuration in a pull request, the sandbox should be considered bypassable, and the tool must be evaluated based on the primitives it would expose in its least restrictive configuration.
+    *   **Analyze for First-Order LOTP (Direct Primitive):**
+        *   Does the tool process a **configuration file** (e.g., `package.json`) or a **data input file** (e.g., an XSLT stylesheet) that could be controlled by an attacker in a pull request? When analyzing a configuration file, you must verify that the tool loads it from a location the attacker can control (e.g., the current working directory). A tool that only loads configuration from a secure, trusted location (e.g., the user's home directory) is not a LOTP vector.
+        *   If yes, what is the resulting **malicious primitive**? Based on the primitive, classify it as a **Tool** or a **Gadget**.
+            *   **LOTP Tool (RCE):** Does it provide direct Remote Code Execution?
+            *   **LOTP Gadget (Non-RCE Primitives):** Does it provide a lesser primitive?
+                *   **Arbitrary File Write:** Can it write or overwrite files anywhere on the filesystem?
+                *   **Arbitrary File Read:** Can it read arbitrary files from the filesystem?
+                *   **Arbitrary Network Access:** Can it make outbound network calls (e.g., HTTP, DNS)?
+                *   **Environment Variable Manipulation:** Can it set environment variables for subsequent pipeline steps?
+        *   Crucially, you must also verify that the primitive is not a **"dud"**. A primitive is only useful if the attacker can see or use the result. For example, if a gadget can read a file, can it also print the contents to the logs or send them over the network? If it can write a file, can the attacker control the contents? For an **Arbitrary File Write** to be a useful "Setup Gadget", your analysis must verify it can write *outside the checkout directory* to a location that can influence a subsequent process. Your analysis must confirm a complete chain from primitive to useful output.
+    *   **Analyze for Second-Order LOTP (Chained Attack):**
+        *   If it is a **Gadget**, could it act as a **"Setup Gadget"**? Explain how its primitive could be used to enable another tool.
+        *   Could this tool act as an **"Execution Gadget"**? (i.e., it is triggered by a change made by a setup gadget).
+
+4.  **Provide a Conclusion:**
+    *   State clearly whether the item is a **First-Order LOTP Tool** or a **Second-Order LOTP Gadget**, and why.
+    *   Specify the exact malicious primitive it provides.
+    *   If it is a Gadget, discuss its potential role as a "Setup" or "Execution" gadget in a Second-Order attack chain.
+    *   Reference specific examples or official documentation for the tool to support your conclusion.
+"""
