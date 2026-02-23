@@ -7,7 +7,7 @@ tags:
 references: 
   - https://linux.die.net/man/1/wget
   - https://github.com/mirror/wget
-files: [.wgetrc]
+files: [$HOME/.wgetrc]
 ---
 
 `wget` is a GNU utility for non-interactive downloads of files from the web (with a few other supported protocols).
