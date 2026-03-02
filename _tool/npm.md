@@ -1,6 +1,7 @@
 ---
 title: NPM
 tags:
+  - cli
   - config-file
   - eval-sh
   - eval-js

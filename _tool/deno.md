@@ -1,6 +1,7 @@
 ---
 title: deno
 tags:
+  - cli
   - config-file
   - eval-js
 references:

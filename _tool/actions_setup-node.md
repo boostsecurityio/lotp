@@ -1,6 +1,7 @@
 ---
 title: actions/setup-node
 tags:
+  - github-actions
   - config-file
   - eval-js
 references: 
