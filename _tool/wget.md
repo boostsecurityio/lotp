@@ -2,8 +2,7 @@
 title: wget
 tags:
   - cli
-  - config-file
-  - eval-sh
+  - env-var-and-config-file
 references: 
   - https://linux.die.net/man/1/wget
   - https://github.com/mirror/wget
