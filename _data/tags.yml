@@ -16,6 +16,9 @@ input-file:
 env-var:
   docs: |
     The tool uses an environment variable that allows code execution.
+env-var-and-config-file:
+  docs: |
+    The tool uses a combination of environment variables and a config file that allows code execution.
 eval-js:
   docs: |
     The tool evaluates JavaScript code.

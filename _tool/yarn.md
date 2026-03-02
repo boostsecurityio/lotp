@@ -1,6 +1,7 @@
 ---
 title: yarn
 tags:
+  - cli
   - config-file
   - eval-js
 references: 
