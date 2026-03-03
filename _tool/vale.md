@@ -1,5 +1,5 @@
 ---
-title: Vale
+title: vale
 tags:
  - cli
  - config-file

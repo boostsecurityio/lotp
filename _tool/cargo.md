@@ -1,5 +1,5 @@
 ---
-title: Cargo
+title: cargo
 tags:
   - cli
   - eval-sh

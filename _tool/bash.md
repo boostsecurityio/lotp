@@ -1,5 +1,5 @@
 ---
-title: Bash
+title: bash
 tags:
   - cli
   - config-file

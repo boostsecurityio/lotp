@@ -1,5 +1,5 @@
 ---
-title: NPM
+title: npm
 tags:
   - cli
   - config-file
