@@ -74,11 +74,3 @@ from _struct import *
 from _struct import _clearcache
 print("LOTP: local struct.py executed")
 ```
-
-Forwarding `_struct` lets this command finish. The result depends on the import chain and whether a module has already been loaded; not every Python command imports `struct`.
-
-`python /trusted-tools/process.py` instead puts the script's directory first, not an unrelated working directory. An installed `pip` launcher also does not automatically search the working directory in the same way as `python -m pip`. Other paths or local package installation can still introduce untrusted code.
-
-Use `python -I` where compatible to ignore `PYTHON*` variables and exclude the automatic unsafe import path. `-P` (Python 3.11+) only prevents that path; `-E` only ignores `PYTHON*` variables. Neither alone covers both routes.
-
-[Sandbox reproduction](https://github.com/boost-rnd/lotp-sandbox/tree/main/python)
