@@ -8,7 +8,7 @@ references:
   - https://docs.python.org/3/using/cmdline.html#environment-variables
   - https://docs.python.org/3/library/sys_path_init.html
   - https://docs.python.org/3/reference/import.html
-files: [script.py, pip.py, struct.py]
+files: [*.py]
 ---
 
 `python` is used to execute Python programs.
