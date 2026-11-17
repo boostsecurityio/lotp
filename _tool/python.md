@@ -5,13 +5,33 @@ tags:
   - input-file
   - env-var
 references:
-  - https://docs.python.org/3/using/cmdline.html
+  - https://docs.python.org/3/using/cmdline.html#environment-variables
   - https://docs.python.org/3/library/sys_path_init.html
   - https://docs.python.org/3/reference/import.html
 files: [script.py, pip.py, struct.py]
 ---
 
-`python` can execute an untrusted script directly or load untrusted code during a trusted command.
+`python` is used to execute Python programs.
+
+## Environment variable poisoning
+
+By default, `python` doesn't load any configuration files in the current directory. However, if we're able to poison multiple environment variables, we can gain code execution before any `python`/`pip` invocation through the `$PYTHONWARNINGS` environment variable.
+
+This environment variable, while usually intended to control Python warnings, lets us load a Python module by name through the `category` section. We can use this to load the `antigravity` module which is an easter egg that opens an [xkcd](https://xkcd.com/) comic in your favorite browser.
+
+![https://xkcd.com/353/](https://imgs.xkcd.com/comics/python.png)
+
+To open the comic in a web browser, `antigravity` relies on the `webbrowser` module which in turn uses the `$BROWSER` environment variable (if configured) to choose an executable with which to open the comic URL.
+
+From there, the chain can be adapted depending on the available utilities, but here is a functional example with bash:
+
+```bash
+PYTHONWARNINGS="::antigravity.::"
+BROWSER="/bin/bash"
+BASH_ENV="$(f=$(mktemp);echo pwned; echo exit>$f; echo $f)"
+```
+
+> While `$(echo pwned)` would've been sufficient as an assignment to `$BASH_ENV`, the additional commands ensure that the invocation to `/bin/bash` returns a successful status code which prevents the opening of an additional browser.
 
 ## Direct execution
 
@@ -58,17 +78,6 @@ print("LOTP: local struct.py executed")
 Forwarding `_struct` lets this command finish. The result depends on the import chain and whether a module has already been loaded; not every Python command imports `struct`.
 
 `python /trusted-tools/process.py` instead puts the script's directory first, not an unrelated working directory. An installed `pip` launcher also does not automatically search the working directory in the same way as `python -m pip`. Other paths or local package installation can still introduce untrusted code.
-
-## Environment-variable poisoning
-
-An attacker who can poison the process environment can run code without changing the script. `PYTHONWARNINGS` imports `antigravity` while parsing a warning category. `antigravity` opens an XKCD URL via `webbrowser`, which uses `BROWSER` to choose the program. If `BROWSER` selects Bash, Bash reads the file named by `BASH_ENV` on startup:
-
-```sh
-printf 'echo "LOTP: browser shell ran"\n' > browser.sh
-PYTHONWARNINGS='::antigravity.::' BROWSER=/bin/bash BASH_ENV="$PWD/browser.sh" python -c 'pass'
-```
-
-This prints `LOTP: browser shell ran` before Bash tries to open the URL as a script. Python may also report an invalid warning category *after* the import. The sandbox uses the same chain to verify access to `FLAG`; `antigravity` is not imported by default.
 
 Use `python -I` where compatible to ignore `PYTHON*` variables and exclude the automatic unsafe import path. `-P` (Python 3.11+) only prevents that path; `-E` only ignores `PYTHON*` variables. Neither alone covers both routes.
 
