@@ -2,9 +2,12 @@
 title: python
 tags:
   - cli
+  - input-file
   - env-var
-references: 
-- https://docs.python.org/3/using/cmdline.html#environment-variables
+references:
+  - https://docs.python.org/3/using/cmdline.html#environment-variables
+  - https://docs.python.org/3/library/sys_path_init.html
+  - https://docs.python.org/3/reference/import.html
 files: []
 ---
 
@@ -29,3 +32,45 @@ BASH_ENV="$(f=$(mktemp);echo pwned; echo exit>$f; echo $f)"
 ```
 
 > While `$(echo pwned)` would've been sufficient as an assignment to `$BASH_ENV`, the additional commands ensure that the invocation to `/bin/bash` returns a successful status code which prevents the opening of an additional browser.
+
+## Direct execution
+
+If a pipeline runs an attacker-controlled script, its code runs directly:
+
+```sh
+python script.py
+```
+
+`python -I script.py` still runs that script; isolation only changes how Python finds imports and handles environment settings.
+
+## Module shadowing
+
+### Shadow the invoked module
+
+With `-m`, `-c`, or standard input, Python searches the current directory first for imports. A checkout containing `pip.py` can intercept an existing command:
+
+```sh
+python -m pip --version
+```
+
+```python
+# pip.py in the working directory
+print("LOTP: local pip.py executed")
+```
+
+This replaces pip rather than continuing the install. The same applies to other `python -m NAME` commands if the checkout contains `NAME.py`.
+
+### Shadow a transitive import
+
+An import *inside* trusted code can also be shadowed. For example, `base64` imports `struct`:
+
+```sh
+python -c 'import base64; print(base64.b64decode("aGVsbG8=").decode())'
+```
+
+```python
+# struct.py in the working directory
+from _struct import *
+from _struct import _clearcache
+print("LOTP: local struct.py executed")
+```
