@@ -28,7 +28,7 @@ Most of its commands will consume `package.json` `scripts` section, except for
 | `npm stop`| | `prestop`, `stop`, `poststop` |
 | `npm test`| `tst`, `t` | `pretest`, `test`, `posttest` |
 | `npm version <version>`| `verison` |`postversion`, `version`, `preversion` |
-| `npm install`|  `add`, `i`, `in`, `ins`, `inst`, `insta`, `instal`, `isnt`, `isnta`, `isntal`, `isntall` |`postversion`, `version`, `preversion` |
+| `npm install`|  `add`, `i`, `in`, `ins`, `inst`, `insta`, `instal`, `isnt`, `isnta`, `isntal`, `isntall` |`postinstall`, `install`, `preinstall` |
 
 `package.json`:
 
